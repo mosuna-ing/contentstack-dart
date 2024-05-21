@@ -3,23 +3,22 @@ import 'package:contentstack/src/image/filter.dart';
 import 'package:contentstack/src/image/fit.dart';
 import 'package:contentstack/src/image/format.dart';
 import 'package:contentstack/src/image/orientation.dart';
-import 'package:dotenv/dotenv.dart' show load, env;
+import 'package:dotenv/dotenv.dart';
 import 'package:test/test.dart';
 
 void main() {
   //var logger = Logger(printer: PrettyPrinter());
 
-  load();
-  final apiKey = env['apiKey'];
-  final host = env['host'];
-  final deliveryToken = env['deliveryToken'];
-  final environment = env['environment'];
-  final Stack stack = Stack(apiKey, deliveryToken, environment, host: host);
+  final dotEnv = DotEnv()..load();
+  final apiKey = dotEnv.map['apiKey']!;
+  final deliveryToken = dotEnv.map['deliveryToken']!;
+  final environment = dotEnv.map['environment']!;
+  final Stack stack = Stack(apiKey, deliveryToken, environment, branch: 'main');
 
   group('ImageTransformation functional testcases', () {
     const imageUrl =
         'https://images.contentstack.io/v3/assets/download';
-    ImageTransformation imageTransformation;
+    late ImageTransformation imageTransformation;
 
     setUp(() {
       imageTransformation = stack.imageTransform(imageUrl);
@@ -232,7 +231,7 @@ void main() {
 
     test('orientation horizontallyAndRotate90DegreeLeft', () {
       final response = imageTransformation
-        ..orientation(Orientation.horizontallyAndRotate90DegreeLeft())
+        ..orientation(Orientation.horizontallyAndRotate90DegreesLeft())
         ..getUrl();
       expect('orient=5', response.query.toString());
     });

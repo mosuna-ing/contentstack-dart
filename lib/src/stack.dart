@@ -20,11 +20,11 @@ class Stack {
   final String _deliveryToken;
   final String _environment;
   String _host;
-  final String branch;
+  final String? branch;
   final Region region;
   final String apiVersion;
-  Map<String, dynamic> livePreview;
-  HttpClient _client;
+  Map<String, dynamic>? livePreview;
+  late HttpClient _client;
 
   ///
   /// Create a new Stack instance with stack's apikey, token,
@@ -65,8 +65,8 @@ class Stack {
     this.region = Region.us,
     this.branch,
     String host = 'cdn.contentstack.io',
-    BaseClient client,
-    this.livePreview,
+    BaseClient? client,
+    this.livePreview = const <String, dynamic>{},
   }) : _host = (region == Region.us)
             ? host
             : (host == 'cdn.contentstack.io'
@@ -95,10 +95,10 @@ class Stack {
       'environment': _environment,
     };
 
-    if (branch != null && branch.isNotEmpty) {
-      headers['branch'] = branch;
+    if (branch != null && branch!.isNotEmpty) {
+      headers['branch'] = branch!;
     }
-    if (livePreview != null && livePreview.isNotEmpty) {
+    if (livePreview != null && livePreview!.isNotEmpty) {
       __validateLivePreview();
     }
     _client = HttpClient(headers, client: client, stack: this);
@@ -161,18 +161,18 @@ class Stack {
   /// final stack = contentstack.Stack(apiKey, deliveryToken, environment);
   /// var environment = stack.livePreview;
   /// ```
-  Map get getLivePreview => livePreview;
+  Map? get getLivePreview => livePreview;
 
   ///
   /// Validates the livePreview
   ///
   void __validateLivePreview() {
-    if (livePreview.containsKey('enable')) {
-      if (!livePreview.containsKey('authorization') ||
-          livePreview['authorization'].toString().isEmpty) {
+    if (livePreview!.containsKey('enable')) {
+      if (!livePreview!.containsKey('authorization') ||
+          livePreview!['authorization'].toString().isEmpty) {
         throw Exception('Authorization is required to enable live preview');
-      } else if (!livePreview.containsKey('host') ||
-          livePreview['host'].toString().isEmpty) {
+      } else if (!livePreview!.containsKey('host') ||
+          livePreview!['host'].toString().isEmpty) {
         throw Exception('Host is required to enable live preview');
       }
     }
@@ -226,7 +226,7 @@ class Stack {
   /// var contentType = stack.contentType('content_type_id');
   /// ```
   ///
-  ContentType contentType([String contentTypeId]) {
+  ContentType contentType(String contentTypeId) {
     return ContentType(contentTypeId, _client);
   }
 
@@ -368,10 +368,10 @@ class Stack {
   /// Returns: List Of [SyncResult]
   ///
   Future<T> sync<T, K>(
-      {String contentTypeUid,
-      String fromDate,
-      String locale,
-      PublishType publishType}) async {
+      {String? contentTypeUid,
+      String? fromDate,
+      String? locale,
+      PublishType? publishType}) async {
     final parameter = <String, String>{};
     parameter['init'] = 'true';
     if (contentTypeUid != null && contentTypeUid.isNotEmpty) {
@@ -384,19 +384,19 @@ class Stack {
       parameter['locale'] = locale;
     }
     if (publishType != null) {
-      publishType.when(assetPublished: (result) {
+      publishType.when(assetPublished: () {
         parameter['publish_type'] = 'asset_published';
-      }, entryPublished: (result) {
+      }, entryPublished: () {
         parameter['publish_type'] = 'entry_published';
-      }, assetUnpublished: (result) {
+      }, assetUnpublished: () {
         parameter['publish_type'] = 'asset_unpublished';
-      }, assetDeleted: (result) {
+      }, assetDeleted: () {
         parameter['publish_type'] = 'asset_deleted';
-      }, entryUnpublished: (result) {
+      }, entryUnpublished: () {
         parameter['publish_type'] = 'entry_unpublished';
-      }, entryDeleted: (result) {
+      }, entryDeleted: () {
         parameter['publish_type'] = 'entry_deleted';
-      }, contentTypeDeleted: (result) {
+      }, contentTypeDeleted: () {
         parameter['publish_type'] = 'content_type_deleted';
       });
     }
@@ -417,7 +417,7 @@ class Stack {
       parameters['sync_token'] = syncToken;
     }
 
-    parameters['environment'] = _client.stackHeaders['environment'];
+    parameters['environment'] = _client.stackHeaders['environment']!;
     final Uri uri = Uri.https(endpoint, '$apiVersion/stacks/sync', parameters);
     return _client.sendRequest<T, K>(uri);
   }
@@ -429,18 +429,18 @@ class Stack {
   }
 
   void livePreviewQuery(Map<String, dynamic> livePreviewQuery) {
-    if (livePreview.containsKey('enable')) {
-      final bool enable = livePreview['enable'] as bool;
+    if (livePreview?.containsKey('enable') ?? false) {
+      final bool enable = livePreview!['enable'] as bool;
       if (enable) {
         if (livePreviewQuery.containsKey('live_preview') &&
             livePreviewQuery['live_preview'] != null) {
-          livePreview['live_preview'] = livePreviewQuery['live_preview'];
+          livePreview!['live_preview'] = livePreviewQuery['live_preview'];
         } else {
-          livePreview['live_preview'] = 'init';
+          livePreview!['live_preview'] = 'init';
         }
         if (livePreviewQuery.containsKey('content_type_uid') &&
             livePreviewQuery['content_type_uid'] != null) {
-          livePreview['content_type_uid'] =
+          livePreview!['content_type_uid'] =
               livePreviewQuery['content_type_uid'];
         }
       }

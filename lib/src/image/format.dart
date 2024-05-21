@@ -1,20 +1,21 @@
-import 'package:super_enum/super_enum.dart';
-part 'format.g.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@superEnum
-enum _Format {
-  @object
-  Gif,
-  @object
-  Png,
-  @object
-  Jpg,
-  @object
-  Pjpg,
-  @object
-  Webp,
-  @object
-  Webplossy,
-  @object
-  Webplossless,
+part 'format.freezed.dart';
+
+@freezed
+class Format with _$Format {
+  const factory Format.gif() = FormatGif;
+
+  const factory Format.png() = FormatPng;
+
+  const factory Format.jpg() = FormatJpg;
+
+  const factory Format.pjpg() = FormatPjpg;
+
+  const factory Format.webp() = FormatWebp;
+
+  const factory Format.webplossy() = FormatWebplossy;
+
+  const factory Format.webplossless() = FormatWebplossless;
+
 }

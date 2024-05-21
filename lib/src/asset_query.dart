@@ -9,10 +9,10 @@ import 'package:contentstack/src/base_query.dart';
 /// Learn more about [Assets](https://www.contentstack.com/docs/developers/apis/content-delivery-api/#all-assets)
 class AssetQuery extends BaseQuery {
   final HttpClient _client;
-  String _urlPath;
+  late String _urlPath;
 
-  AssetQuery([this._client]) {
-    queryParameter['environment'] = _client.stackHeaders['environment'];
+  AssetQuery(this._client) {
+    queryParameter['environment'] = _client.stackHeaders['environment'] ?? '';
     _urlPath = '/${_client.stack.apiVersion}/assets';
   }
 

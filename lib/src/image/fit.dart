@@ -1,11 +1,10 @@
-import 'package:super_enum/super_enum.dart';
-part 'fit.g.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@superEnum
-enum _Fit {
-//nearest, bilinear, bicubic, lanczos
-  @object
-  Bounds,
-  @object
-  Crop,
+part 'fit.freezed.dart';
+
+@freezed
+class Fit with _$Fit {
+  const factory Fit.bounds() = FitBounds;
+
+  const factory Fit.crop() = FitCrop;
 }

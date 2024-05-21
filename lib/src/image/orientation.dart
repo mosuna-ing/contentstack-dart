@@ -1,22 +1,22 @@
-import 'package:super_enum/super_enum.dart';
-part 'orientation.g.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@superEnum
-enum _Orientation {
-  @object
-  ToDefault,
-  @object
-  Horizontally,
-  @object
-  HorizontallyAndVertically,
-  @object
-  Vertically,
-  @object
-  HorizontallyAndRotate90DegreeLeft,
-  @object
-  Degrees90TowardsRight,
-  @object
-  HorizontallyAndRotate90DegreesRight,
-  @object
-  Rotate90DegreesLeft,
+part 'orientation.freezed.dart';
+
+@freezed
+class Orientation with _$Orientation {
+  const factory Orientation.toDefault() = OrientationToDefault;
+
+  const factory Orientation.horizontally() = OrientationHorizontally;
+
+  const factory Orientation.horizontallyAndVertically() = OrientationHorizontallyAndVertically;
+
+  const factory Orientation.vertically() = OrientationVertically;
+
+  const factory Orientation.horizontallyAndRotate90DegreesLeft() = OrientationHorizontallyAndRotate90DegreesLeft;
+
+  const factory Orientation.degrees90TowardsRight() = OrientationDegrees90TowardsRight;
+
+  const factory Orientation.horizontallyAndRotate90DegreesRight() = OrientationHorizontallyAndRotate90DegreesRight;
+
+  const factory Orientation.rotate90DegreesLeft() = OrientationRotate90DegreesLeft;
 }

@@ -6,16 +6,14 @@ part of 'syncresult.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SyncResult _$SyncResultFromJson(Map<String, dynamic> json) {
-  return SyncResult(
-    json['items'] as List,
-    json['skip'] as int,
-    json['limit'] as int,
-    json['total_count'] as int,
-    json['sync_token'] as String,
-    json['pagination_token'] as String,
-  );
-}
+SyncResult _$SyncResultFromJson(Map<String, dynamic> json) => SyncResult(
+      json['items'] as List<dynamic>,
+      json['skip'] as int,
+      json['limit'] as int,
+      json['total_count'] as int,
+      json['sync_token'] as String,
+      json['pagination_token'] as String,
+    );
 
 Map<String, dynamic> _$SyncResultToJson(SyncResult instance) =>
     <String, dynamic>{
@@ -27,14 +25,12 @@ Map<String, dynamic> _$SyncResultToJson(SyncResult instance) =>
       'pagination_token': instance.paginationToken,
     };
 
-Items _$ItemsFromJson(Map<String, dynamic> json) {
-  return Items(
-    json['type'] as String,
-    json['eventAt'] as String,
-    json['contentTypeUid'] as String,
-    json['data'] as List,
-  );
-}
+Items _$ItemsFromJson(Map<String, dynamic> json) => Items(
+      json['type'] as String,
+      json['eventAt'] as String,
+      json['contentTypeUid'] as String,
+      json['data'] as List<dynamic>,
+    );
 
 Map<String, dynamic> _$ItemsToJson(Items instance) => <String, dynamic>{
       'type': instance.type,
@@ -43,13 +39,11 @@ Map<String, dynamic> _$ItemsToJson(Items instance) => <String, dynamic>{
       'data': instance.data,
     };
 
-Data _$DataFromJson(Map<String, dynamic> json) {
-  return Data(
-    json['uid'] as String,
-    json['locale'] as String,
-    json['title'] as String,
-  );
-}
+Data _$DataFromJson(Map<String, dynamic> json) => Data(
+      json['uid'] as String,
+      json['locale'] as String,
+      json['title'] as String,
+    );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
       'uid': instance.uid,

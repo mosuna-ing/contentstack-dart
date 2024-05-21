@@ -38,7 +38,7 @@ class ImageTransformation {
   /// await imageTransformation.auto(auto: 'webp', format: 'pjpg').fetch();
   /// ```
   ///
-  void auto({String auto, String format}) {
+  void auto({String? auto, String? format}) {
     if (auto != null) {
       query.append('auto', auto);
     }
@@ -204,19 +204,19 @@ class ImageTransformation {
   /// final response = await imageTransformation.convert(Format.pjpg).fetch();
   /// ```
   void convert(Format format) {
-    format.when(gif: (formatResult) {
+    format.when(gif: () {
       query.append('format', 'gif');
-    }, png: (formatResult) {
+    }, png: () {
       query.append('format', 'png');
-    }, jpg: (formatResult) {
+    }, jpg: () {
       query.append('format', 'jpg');
-    }, pjpg: (formatResult) {
+    }, pjpg: () {
       query.append('format', 'pjpg');
-    }, webp: (formatResult) {
+    }, webp: () {
       query.append('format', 'webp');
-    }, webplossy: (formatResult) {
+    }, webplossy: () {
       query.append('format', 'webply');
-    }, webplossless: (formatResult) {
+    }, webplossless: () {
       query.append('format', 'webpll');
     });
   }
@@ -269,7 +269,7 @@ class ImageTransformation {
   /// final response = await imageTransformation.cropBy(150, 100).fetch();
   /// log.fine(response);
   /// ```
-  void cropBy(int width, int height, {String region, String offset}) {
+  void cropBy(int? width, int? height, {String? region, String? offset}) {
     /// checks if cropRatio is not null then takes height, width and
     /// cropRatio as prams else it takes crop params and comas
     /// separated width & height
@@ -350,7 +350,7 @@ class ImageTransformation {
   /// ```
   ///
 
-  void fit(double width, double height, Fit fit) {
+  void fit(double? width, double? height, Fit? fit) {
     if (width != null) {
       query.append('width', width.toString());
     }
@@ -359,9 +359,9 @@ class ImageTransformation {
     }
     if (fit != null) {
       //enum Fit { bounds, crop }
-      fit.when(bounds: (value) {
+      fit.when(bounds: () {
         query.append('fit', 'bounds');
-      }, crop: (value) {
+      }, crop: () {
         query.append('fit', 'crop');
       });
     }
@@ -418,21 +418,21 @@ class ImageTransformation {
     //  horizontallyAndRotate90DegreesRight = '7';
     //  rotate90DegreesLeft = '8';
     if (orient != null) {
-      orient.when(toDefault: (orientation) {
+      orient.when(toDefault: () {
         query.append('orient', 1);
-      }, horizontally: (orientation) {
+      }, horizontally: () {
         query.append('orient', 2);
-      }, horizontallyAndVertically: (orientation) {
+      }, horizontallyAndVertically: () {
         query.append('orient', 3);
-      }, vertically: (orientation) {
+      }, vertically: () {
         query.append('orient', 4);
-      }, horizontallyAndRotate90DegreeLeft: (orientation) {
+      }, horizontallyAndRotate90DegreesLeft: () {
         query.append('orient', 5);
-      }, degrees90TowardsRight: (orientation) {
+      }, degrees90TowardsRight: () {
         query.append('orient', 6);
-      }, horizontallyAndRotate90DegreesRight: (orientation) {
+      }, horizontallyAndRotate90DegreesRight: () {
         query.append('orient', 7);
-      }, rotate90DegreesLeft: (orientation) {
+      }, rotate90DegreesLeft: () {
         query.append('orient', 8);
       });
     }
@@ -462,10 +462,10 @@ class ImageTransformation {
   /// ```
   ///
   void overlay(String overlayUrl,
-      {String overlayAlign,
-      String overlayRepeat,
-      int overlayWidth,
-      int overlayHeight}) {
+      {String? overlayAlign,
+      String? overlayRepeat,
+      int? overlayWidth,
+      int? overlayHeight}) {
     query.append('overlay', overlayUrl);
 
     if (overlayAlign != null) {
@@ -572,7 +572,7 @@ class ImageTransformation {
   /// final response =
   ///       await imageTransformation.resize(width:100,disable:true).fetch();
   /// ```
-  void resize({int width, int height, bool disable}) {
+  void resize({int? width, int? height, bool? disable}) {
     if (width != null) {
       //queryParameter['width'] = width.toString();
       query.append('width', width.toString());
@@ -604,7 +604,7 @@ class ImageTransformation {
   ///       resizeFilter(width: 20, height: 40, filter: Filter.bilinear);
   /// ```
   ///
-  void resizeFilter({int width, int height, Filter filter}) {
+  void resizeFilter({int? width, int? height, Filter? filter}) {
     if (width != null) {
       query.append('width', width.toString());
     }
@@ -612,13 +612,13 @@ class ImageTransformation {
       query.append('height', height.toString());
     }
     if (filter != null) {
-      filter.when(nearest: (filterType) {
+      filter.when(nearest: () {
         query.append('resize-filter', 'nearest');
-      }, bilinear: (filterType) {
+      }, bilinear: () {
         query.append('resize-filter', 'bilinear');
-      }, bicubic: (filterType) {
+      }, bicubic: () {
         query.append('resize-filter', 'bicubic');
-      }, lanczos: (filterType) {
+      }, lanczos: () {
         query.append('resize-filter', 'lanczos3');
       });
     }
@@ -681,7 +681,7 @@ class ImageTransformation {
   /// final imageTransformation = stack.imageTransform(imageUrl);
   /// final response = await imageTransformation.trim(25).fetch();
   /// ```
-  void trim([int top, int right, int bottom, int left]) {
+  void trim([int? top, int? right, int? bottom, int? left]) {
     final trimLRBL = [];
     if (top != null) {
       trimLRBL.add(top);

@@ -1,11 +1,13 @@
 import 'package:contentstack/src/query.dart';
-import 'package:super_enum/super_enum.dart';
-part 'operator.g.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@superEnum
-enum _QueryOperator {
-  @Data(fields: [DataField<List<Query>>('queryObjects')])
-  And,
-  @Data(fields: [DataField<List<Query>>('queryObjects')])
-  Or
+part 'operator.freezed.dart';
+
+@freezed
+class QueryOperator with _$QueryOperator {
+  const factory QueryOperator.and(List<Query> queryObjects) = QueryOperatorAnd;
+
+  const factory QueryOperator.or(List<Query> queryObjects) = QueryOperatorOr;
+
+  // factory QueryOperator.fromJson(Map<String, dynamic> json) => _$QueryOperatorFromJson(json);
 }

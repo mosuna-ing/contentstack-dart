@@ -6,24 +6,22 @@ part of 'assetmodel.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AssetModel _$AssetModelFromJson(Map<String, dynamic> json) {
-  return AssetModel(
-    json['uid'] as String,
-    json['created_at'] as String,
-    json['updated_at'] as String,
-    json['created_by'] as String,
-    json['updated_by'] as String,
-    json['content_type'] as String,
-    json['file_size'] as String,
-    json['tags'] as List,
-    json['filename'] as String,
-    json['url'] as String,
-    json['_version'] as int,
-    json['title'] as String,
-    json['dimension'] as Map<String, dynamic>,
-    json['publish_details'] as Map<String, dynamic>,
-  );
-}
+AssetModel _$AssetModelFromJson(Map<String, dynamic> json) => AssetModel(
+      json['uid'] as String,
+      json['created_at'] as String,
+      json['updated_at'] as String,
+      json['created_by'] as String,
+      json['updated_by'] as String,
+      json['content_type'] as String,
+      json['file_size'] as String,
+      json['tags'] as List<dynamic>,
+      json['filename'] as String,
+      json['url'] as String,
+      json['_version'] as int,
+      json['title'] as String,
+      json['dimension'] as Map<String, dynamic>,
+      json['publish_details'] as Map<String, dynamic>,
+    );
 
 Map<String, dynamic> _$AssetModelToJson(AssetModel instance) =>
     <String, dynamic>{

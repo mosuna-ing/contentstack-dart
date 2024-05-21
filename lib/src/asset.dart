@@ -10,7 +10,7 @@ import 'package:contentstack/client.dart';
 class Asset {
   final HttpClient _client;
   final String _uid;
-  String _urlPath;
+  late String _urlPath;
 
   final Map<String, String> assetParameter = <String, String>{};
 
@@ -26,8 +26,8 @@ class Asset {
   ///   print(error['error_code']);
   /// });
   ///
-  Asset(this._uid, [this._client]) {
-    assetParameter['environment'] = _client.stackHeaders['environment'];
+  Asset(this._uid, this._client) {
+    assetParameter['environment'] = _client.stackHeaders['environment'] ?? '';
     _urlPath = '/${_client.stack.apiVersion}/assets';
   }
 
@@ -58,7 +58,7 @@ class Asset {
   ///   print(error['error_code']);
   /// });
   Future<T> fetch<T, K>() {
-    if (_uid == null || _uid.isEmpty) {
+    if (_uid.isEmpty) {
       throw Exception('Provide asset uid to fetch single entry');
     }
     final uri =

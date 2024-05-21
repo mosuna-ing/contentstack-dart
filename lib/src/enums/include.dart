@@ -1,12 +1,17 @@
-import 'package:super_enum/super_enum.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+
+part 'include.freezed.dart';
 part 'include.g.dart';
 
-@superEnum
-enum _Include {
-  @Data(fields: [DataField<List<String>>('fieldUidList')])
-  None,
-  @Data(fields: [DataField<List<String>>('fieldUidList')])
-  Only,
-  @Data(fields: [DataField<List<String>>('fieldUidList')])
-  Except
+@freezed
+class Include with _$Include {
+  const factory Include.none(List<String> fieldUidList) = IncludeNone;
+
+  const factory Include.only(List<String> fieldUidList) = IncludeOnly;
+
+  const factory Include.except(List<String> fieldUidList) = IncludeExcept;
+
+  factory Include.fromJson(Map<String, dynamic> json) =>
+      _$IncludeFromJson(json);
 }

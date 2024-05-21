@@ -1,26 +1,30 @@
-import 'package:super_enum/super_enum.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'operations.freezed.dart';
+
 part 'operations.g.dart';
 
-@superEnum
-enum _QueryOperation {
-  @Data(fields: [DataField<dynamic>('value')])
-  Equals,
-  @Data(fields: [DataField<dynamic>('value')])
-  NotEquals,
-  @Data(fields: [DataField<List<dynamic>>('value')])
-  Includes,
-  @Data(fields: [DataField<List<dynamic>>('value')])
-  Excludes,
-  @Data(fields: [DataField<dynamic>('value')])
-  IsLessThan,
-  @Data(fields: [DataField<dynamic>('value')])
-  IsLessThanOrEqual,
-  @Data(fields: [DataField<dynamic>('value')])
-  IsGreaterThan,
-  @Data(fields: [DataField<dynamic>('value')])
-  IsGreaterThanOrEqual,
-  @Data(fields: [DataField<bool>('value')])
-  Exists,
-  @Data(fields: [DataField<String>('regex')])
-  Matches,
+@freezed
+class QueryOperation with _$QueryOperation {
+  const factory QueryOperation.equals(dynamic value) = QueryOperationEquals;
+
+  const factory QueryOperation.notEquals(dynamic value) = QueryOperationNotEquals;
+
+  const factory QueryOperation.includes(dynamic value) = QueryOperationIncludes;
+
+  const factory QueryOperation.excludes(dynamic value) = QueryOperationExcludes;
+
+  const factory QueryOperation.isLessThan(dynamic value) = QueryOperationIsLessThan;
+
+  const factory QueryOperation.isLessThanOrEqual(dynamic value) = QueryOperationIsLessThanOrEqual;
+
+  const factory QueryOperation.isGreaterThan(dynamic value) = QueryOperationIsGreaterThan;
+
+  const factory QueryOperation.isGreaterThanOrEqual(dynamic value) = QueryOperationIsGreaterThanOrEqual;
+
+  const factory QueryOperation.exists(dynamic value) = QueryOperationExists;
+
+  const factory QueryOperation.matches(dynamic value) = QueryOperationMatches;
+
+  factory QueryOperation.fromJson(Map<String, dynamic> json) => _$QueryOperationFromJson(json);
 }

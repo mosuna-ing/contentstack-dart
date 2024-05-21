@@ -1,34 +1,26 @@
 import 'package:contentstack/contentstack.dart';
 import 'package:contentstack/contentstack.dart' as contentstack;
 import 'package:contentstack/src/query_params.dart';
-import 'package:dotenv/dotenv.dart' show load, env;
+import 'package:dotenv/dotenv.dart';
 import 'package:logger/logger.dart';
 import 'package:test/test.dart';
 
 void main() {
   final logger = Logger(printer: PrettyPrinter());
 
-  load();
-  final apiKey = env['apiKey'];
-  final host = env['host'];
-  final deliveryToken = env['deliveryToken'];
-  final environment = env['environment'];
-  final branch = 'development';
+  final dotEnv = DotEnv()..load();
+  final apiKey = dotEnv.map['apiKey']!;
+  final deliveryToken = dotEnv.map['deliveryToken']!;
+  final environment = dotEnv.map['environment']!;
+  final branch = 'main';
+  final Stack stack = Stack(apiKey, deliveryToken, environment, branch: branch);
   logger.i('credentials loaded..');
-  final Stack stack = Stack(
-    apiKey,
-    deliveryToken,
-    environment,
-    host: host,
-    branch: branch
-  );
 
   group('functional testcases for stack', () {
     test('check stack credentials', () {
       expect(stack.apiKey, apiKey);
       expect(stack.deliveryToken, deliveryToken);
       expect(stack.environment, environment);
-      expect(stack.host, host);
       expect(stack.branch, branch);
     });
 
@@ -57,7 +49,7 @@ void main() {
         final stack = contentstack.Stack(' !', 'accessToken', 'environment');
         expect(stack, equals(null));
       } catch (e) {
-        expect(e.message, equals('Must not be null'));
+        expect(e.toString(), equals('Must not be null'));
       }
     });
 
@@ -66,7 +58,7 @@ void main() {
         final stack = contentstack.Stack('apiKey', ' +', 'environment');
         expect(stack, equals(null));
       } catch (e) {
-        expect(e.message, equals('Must not be null'));
+        expect(e.toString(), equals('Must not be null'));
       }
     });
 
@@ -75,7 +67,7 @@ void main() {
         final stack = contentstack.Stack('apiKey', 'apiKey', '} ');
         expect(stack, equals(null));
       } catch (e) {
-        expect(e.message, equals('Must not be null'));
+        expect(e.toString(), equals('Must not be null'));
       }
     });
 
@@ -128,7 +120,7 @@ void main() {
         contentType.urlPath = null;
         await contentType.fetch().then((response) {}).catchError((error) {});
       } catch (e) {
-        expect(e.message, equals('content_type_uid is missing'));
+        expect(e.toString(), equals('content_type_uid is missing'));
       }
     });
 

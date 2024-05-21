@@ -1,16 +1,15 @@
 import 'package:contentstack/contentstack.dart' as contentstack;
 import 'package:contentstack/contentstack.dart';
 import 'package:contentstack/src/asset_query.dart';
-import 'package:dotenv/dotenv.dart' show load, env;
+import 'package:dotenv/dotenv.dart';
 import 'package:test/test.dart';
 
 void main() {
-  load();
-  final apiKey = env['apiKey'];
-  final host = env['host'];
-  final deliveryToken = env['deliveryToken'];
-  final environment = env['environment'];
-  final Stack stack = Stack(apiKey, deliveryToken, environment, host: host);
+  final dotEnv = DotEnv()..load();
+  final apiKey = dotEnv.map['apiKey']!;
+  final deliveryToken = dotEnv.map['deliveryToken']!;
+  final environment = dotEnv.map['environment']!;
+  final Stack stack = Stack(apiKey, deliveryToken, environment, branch: 'main');
 
   group('testcases for asset the functional implementation', () {
     var assetUid = '';

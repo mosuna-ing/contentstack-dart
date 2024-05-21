@@ -6,22 +6,20 @@ part of 'entrymodel.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-EntryModel _$EntryModelFromJson(Map<String, dynamic> json) {
-  return EntryModel(
-    json['locale'] as String,
-    json['title'] as String,
-    json['url'] as String,
-    json['description'] as String,
-    json['categories'] as List,
-    json['tags'] as List,
-    json['uid'] as String,
-    json['created_by'] as String,
-    json['updated_by'] as String,
-    json['created_at'] as String,
-    json['updated_at'] as String,
-    json['_version'] as int,
-  );
-}
+EntryModel _$EntryModelFromJson(Map<String, dynamic> json) => EntryModel(
+      json['locale'] as String,
+      json['title'] as String,
+      json['url'] as String,
+      json['description'] as String,
+      json['categories'] as List<dynamic>,
+      json['tags'] as List<dynamic>,
+      json['uid'] as String,
+      json['created_by'] as String,
+      json['updated_by'] as String,
+      json['created_at'] as String,
+      json['updated_at'] as String,
+      json['_version'] as int,
+    );
 
 Map<String, dynamic> _$EntryModelToJson(EntryModel instance) =>
     <String, dynamic>{

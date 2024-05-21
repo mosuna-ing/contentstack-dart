@@ -14,13 +14,14 @@ import 'package:contentstack/src/enums/reference.dart';
 /// Learn more about [Query](https://www.contentstack.com/docs/developers/apis/content-delivery-api/#queries)
 class Query extends BaseQuery {
   final HttpClient _client;
-  final String _contentTypeUid;
-  String _path;
+  final String? _contentTypeUid;
+  String? _path;
 
-  Query([this._client, this._contentTypeUid]) {
-    queryParameter['environment'] = _client.stackHeaders['environment'];
-    _path =
-        '/${_client.stack.apiVersion}/content_types/$_contentTypeUid/entries';
+  Query(this._client, this._contentTypeUid) {
+    queryParameter['environment'] = _client.stackHeaders['environment'] ?? '';
+    if (_contentTypeUid != null && _contentTypeUid!.isNotEmpty) {
+      _path = '/${_client.stack.apiVersion}/content_types/$_contentTypeUid/entries';
+    }
   }
 
   ///
@@ -37,7 +38,7 @@ class Query extends BaseQuery {
   /// entry.addParam(key, value);
   /// ```
   ///
-  void addParam(String key, String value) {
+  void addParam(String? key, String? value) {
     if (key != null && value != null && key.isNotEmpty && value.isNotEmpty) {
       queryParameter[key] = value.toString();
     }
@@ -74,7 +75,7 @@ class Query extends BaseQuery {
     if (preview != null && preview.isNotEmpty) {
       __validateLivePreview(preview);
     }
-    final uri = Uri.https(_client.stack.endpoint, _path, queryParameter);
+    final uri = Uri.https(_client.stack.endpoint, '$_path', queryParameter);
     return _client.sendRequest<T, K>(uri);
   }
 
@@ -198,24 +199,22 @@ class Query extends BaseQuery {
   /// ```
   ///
   void includeReference(String referenceFieldUid,
-      {include.Include includeReferenceField}) {
+      {include.Include? includeReferenceField}) {
     if (referenceFieldUid != null && referenceFieldUid.isNotEmpty) {
       final List referenceArray = [];
       if (includeReferenceField != null) {
-        includeReferenceField.when(none: (fieldUid) {
+        includeReferenceField.when(none: (fieldUidList) {
           referenceArray.add(referenceFieldUid);
-          if (fieldUid.fieldUidList != null &&
-              fieldUid.fieldUidList.isNotEmpty) {
-            for (final item in fieldUid.fieldUidList) {
+          if (fieldUidList.isNotEmpty) {
+            for (final item in fieldUidList) {
               referenceArray.add(item);
             }
           }
           queryParameter['include[]'] = referenceArray.toString();
-        }, only: (fieldUid) {
+        }, only: (fieldUidList) {
           final Map<String, dynamic> referenceOnlyParam = <String, dynamic>{};
-          if (fieldUid.fieldUidList != null &&
-              fieldUid.fieldUidList.isNotEmpty) {
-            for (final item in fieldUid.fieldUidList) {
+          if (fieldUidList.isNotEmpty) {
+            for (final item in fieldUidList) {
               referenceArray.add(item);
             }
           }
@@ -223,11 +222,10 @@ class Query extends BaseQuery {
           //_include(referenceFieldUid);
           includeReference(referenceFieldUid);
           queryParameter['only'] = referenceOnlyParam.toString();
-        }, except: (fieldUid) {
+        }, except: (fieldUidList) {
           final Map<String, dynamic> referenceOnlyParam = <String, dynamic>{};
-          if (fieldUid.fieldUidList != null &&
-              fieldUid.fieldUidList.isNotEmpty) {
-            for (final item in fieldUid.fieldUidList) {
+          if (fieldUidList.isNotEmpty) {
+            for (final item in fieldUidList) {
               referenceArray.add(item);
             }
           }
@@ -358,8 +356,7 @@ class Query extends BaseQuery {
   ///
   void operator(QueryOperator operator) {
     operator.when(and: (and) {
-      final List<Query> queryList =
-          and.queryObjects; //and.queryObjects is list of Query Objects
+      final List<Query> queryList = and; //and is list of Query Objects
       if (queryList.isNotEmpty) {
         final emptyList = [];
         for (final item in queryList) {
@@ -368,8 +365,7 @@ class Query extends BaseQuery {
         parameter['\$and'] = emptyList;
       }
     }, or: (or) {
-      final List<Query> queryList =
-          or.queryObjects; //and.queryObjects is list of Query Objects
+      final List<Query> queryList = or; //or is list of Query Objects
       if (queryList.isNotEmpty) {
         final emptyList = [];
         for (final item in queryList) {
@@ -445,12 +441,12 @@ class Query extends BaseQuery {
   /// ```
   ///
   void whereReference(String referenceUid, QueryReference reference) {
-    if (referenceUid != null && referenceUid.isNotEmpty) {
+    if (referenceUid.isNotEmpty) {
       reference.when(include: (queryInstance) {
-        parameter[referenceUid] = {'\$in_query': queryInstance.query.parameter};
+        parameter[referenceUid] = {'\$in_query': queryInstance.parameter};
       }, notInclude: (queryInstance) {
         parameter[referenceUid] = {
-          '\$nin_query': queryInstance.query.parameter
+          '\$nin_query': queryInstance.parameter
         };
       });
     }

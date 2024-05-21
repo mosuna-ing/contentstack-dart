@@ -19,7 +19,7 @@ class EntryQueryable {
   /// entry.addParam(key, value);
   /// ```
   void addParam(String key, String value) {
-    if (key != null && value != null && key.isNotEmpty && value.isNotEmpty) {
+    if (key.isNotEmpty && value.isNotEmpty) {
       parameter[key] = value.toString();
     }
   }
@@ -39,7 +39,7 @@ class EntryQueryable {
   /// ```
   ///
   void except(List<String> fieldUid) {
-    if (fieldUid != null && fieldUid.isNotEmpty) {
+    if (fieldUid.isNotEmpty) {
       final List referenceArray = [];
       for (final item in fieldUid) {
         referenceArray.add(item);
@@ -160,11 +160,11 @@ class EntryQueryable {
   /// prints(response)
   /// ```
   ///
-  void includeReference(referenceFieldUid, {Include includeReferenceField}) {
+  void includeReference(referenceFieldUid, {Include? includeReferenceField}) {
     if (referenceFieldUid != null && referenceFieldUid.isNotEmpty) {
       final List referenceArray = [];
       if (includeReferenceField != null) {
-        includeReferenceField.when(none: (fieldUid) {
+        includeReferenceField.when(none: (fieldUidList) {
           if (referenceFieldUid.runtimeType == List) {
             for (var uid in referenceFieldUid) {
               referenceArray.add(uid);
@@ -173,29 +173,27 @@ class EntryQueryable {
             referenceArray.add(referenceFieldUid);
           }
 
-          if (fieldUid.fieldUidList != null &&
-              fieldUid.fieldUidList.isNotEmpty) {
-            for (final item in fieldUid.fieldUidList) {
+          if (
+              fieldUidList.isNotEmpty) {
+            for (final item in fieldUidList) {
               referenceArray.add(item);
             }
           }
           parameter['include[]'] = referenceArray.toString();
-        }, only: (fieldUid) {
+        }, only: (fieldUidList) {
           final Map<String, dynamic> referenceOnlyParam = <String, dynamic>{};
-          if (fieldUid.fieldUidList != null &&
-              fieldUid.fieldUidList.isNotEmpty) {
-            for (final item in fieldUid.fieldUidList) {
+          if (fieldUidList.isNotEmpty) {
+            for (final item in fieldUidList) {
               referenceArray.add(item);
             }
           }
           referenceOnlyParam[referenceFieldUid] = referenceArray;
           includeReference(referenceFieldUid);
           parameter['only'] = referenceOnlyParam.toString();
-        }, except: (fieldUid) {
+        }, except: (fieldUidList) {
           final Map<String, dynamic> referenceOnlyParam = <String, dynamic>{};
-          if (fieldUid.fieldUidList != null &&
-              fieldUid.fieldUidList.isNotEmpty) {
-            for (final item in fieldUid.fieldUidList) {
+          if (fieldUidList.isNotEmpty) {
+            for (final item in fieldUidList) {
               referenceArray.add(item);
             }
           }

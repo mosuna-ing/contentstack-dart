@@ -1,23 +1,22 @@
 import 'package:contentstack/contentstack.dart';
 import 'package:contentstack/src/enums/include.dart';
-import 'package:dotenv/dotenv.dart' show load, env;
+import 'package:dotenv/dotenv.dart';
 import 'package:logger/logger.dart';
 import 'package:test/test.dart';
 
 void main() {
   final logger = Logger(printer: PrettyPrinter());
 
-  load();
-  final apiKey = env['apiKey'];
-  final host = env['host'];
-  final deliveryToken = env['deliveryToken'];
-  final environment = env['environment'];
+  final dotEnv = DotEnv()..load();
+  final apiKey = dotEnv.map['apiKey']!;
+  final deliveryToken = dotEnv.map['deliveryToken']!;
+  final environment = dotEnv.map['environment']!;
+  final Stack stack = Stack(apiKey, deliveryToken, environment, branch: 'main');
   var entryUid = '';
 
   logger.i('credentials loaded..');
 
-  final Stack stack = Stack(apiKey, deliveryToken, environment, host: host);
-  final Query query = stack.contentType('faq').entry().query();
+  final Query query = stack.contentType('faq').entry(entryUid: entryUid).query();
   final Entry entry = stack.contentType('faq').entry(entryUid: entryUid);
 
   group('Entry functional testcases', () {
@@ -82,7 +81,7 @@ void main() {
     test('test includeReference includeType only', () {
       const List<String> fieldUid = ['title', 'orange', 'mango'];
       entry.includeReference('category',
-          includeReferenceField: Include.only(fieldUidList: fieldUid));
+          includeReferenceField: Include.only(fieldUid));
       expect(true, entry.parameter.containsKey('include[]'));
       expect(true, entry.parameter.containsKey('only'));
     });
@@ -90,7 +89,7 @@ void main() {
     test('test includeReference includeType except', () {
       const List<String> fieldUid = ['title', 'orange', 'mango'];
       entry.includeReference('category',
-          includeReferenceField: Include.except(fieldUidList: fieldUid));
+          includeReferenceField: Include.except(fieldUid));
       expect(true, entry.parameter.containsKey('include[]'));
       expect(true, entry.parameter.containsKey('except'));
     });
@@ -112,7 +111,7 @@ void main() {
 
   group('Entry API testcases', () {
     var _uid = '';
-    Entry entryInstance;
+    late Entry entryInstance;
 
     // If this is called within a test group, callback
     // will run before all tests in that group.
@@ -189,7 +188,7 @@ void main() {
     test('find the includeReference default with list objects', () async {
       const List<String> fieldUID = ['title', 'attendee', 'created_at'];
       entryInstance.includeReference('categories',
-          includeReferenceField: Include.none(fieldUidList: fieldUID));
+          includeReferenceField: Include.none(fieldUID));
       await entryInstance.fetch().then((response) {
         expect(141, response['error_code']);
       }).catchError((onError) {
@@ -201,7 +200,7 @@ void main() {
       entryInstance.locale('en-us');
       const List<String> fieldUID = ['price', 'orange', 'mango'];
       entryInstance.includeReference('categories',
-          includeReferenceField: Include.only(fieldUidList: fieldUID));
+          includeReferenceField: Include.only(fieldUID));
       await entryInstance.fetch().then((response) {
         expect(141, response['error_code']);
       });
@@ -211,7 +210,7 @@ void main() {
       entryInstance.locale('en-us');
       const List<String> fieldUID = ['price', 'orange', 'mango'];
       entryInstance.includeReference('categories',
-          includeReferenceField: Include.except(fieldUidList: fieldUID));
+          includeReferenceField: Include.except(fieldUID));
       await entryInstance.fetch().then((response) {
         expect(
             "The requested object doesn't exist.", response['error_message']);
@@ -267,7 +266,7 @@ void main() {
     });
 
     test('find the includeReference with multiple strings', () async {
-      final Stack stack = Stack(apiKey, deliveryToken, environment, host: host);
+      final Stack stack = Stack(apiKey, deliveryToken, environment, branch: 'main');
       final Entry entry = stack.contentType('faq').entry(entryUid: 'entryUid');
       const List<String> fieldUID = ['price', 'orange', 'mango'];
       entry.includeReference(fieldUID);

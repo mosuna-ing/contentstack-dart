@@ -3,22 +3,21 @@ import 'package:contentstack/src/enums/include.dart' as include;
 import 'package:contentstack/src/enums/operations.dart';
 import 'package:contentstack/src/enums/operator.dart';
 import 'package:contentstack/src/enums/reference.dart';
-import 'package:dotenv/dotenv.dart' show load, env;
+import 'package:dotenv/dotenv.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('testcases for functional base queries', () {
-    Query query;
-    var apiKey = '', environment = '', deliveryToken = '', host = '';
-    Stack stack;
+    late Query query;
+    var apiKey = '', environment = '', deliveryToken = '';
+    late Stack stack;
 
     setUpAll(() async {
-      load();
-      apiKey = env['apiKey'];
-      host = env['host'];
-      deliveryToken = env['deliveryToken'];
-      environment = env['environment'];
-      stack = Stack(apiKey, deliveryToken, environment, host: host);
+      final dotEnv = DotEnv()..load();
+      apiKey = dotEnv.map['apiKey']!;
+      deliveryToken = dotEnv.map['deliveryToken']!;
+      environment = dotEnv.map['environment']!;
+      stack = Stack(apiKey, deliveryToken, environment, branch: 'main');
     });
 
     setUp(() async {
@@ -33,64 +32,64 @@ void main() {
     });
 
     test('test where equals Operation', () async {
-      query.where('uid', QueryOperation.equals(value: 'theFakeUid'));
+      query.where('uid', QueryOperation.equals('theFakeUid'));
       final contains = query.getQueryUrl().toString();
       expect(
           '{environment: development, query: {"uid":"theFakeUid"}}', contains);
     });
 
     test('test where notEquals operation', () async {
-      query.where('attendee', QueryOperation.notEquals(value: '40'));
+      query.where('attendee', QueryOperation.notEquals('40'));
       final contains = query.getQueryUrl()['query'];
       expect('{\"attendee\":{\"\$ne\":\"40\"}}', contains);
     });
 
     test('test where includes Operation', () async {
       const includeList = ['abc', 'def', 'sample'];
-      query.where('uid', QueryOperation.includes(value: includeList));
+      query.where('uid', QueryOperation.includes(includeList));
       final contains = query.getQueryUrl()['query'];
       expect('{\"uid\":{\"\$in\":[\"abc\",\"def\",\"sample\"]}}', contains);
     });
 
     test('test where excludes Operation', () async {
       const includeList = ['abc', 'def', 'sample'];
-      query.where('uid', QueryOperation.excludes(value: includeList));
+      query.where('uid', QueryOperation.excludes(includeList));
       final contains = query.getQueryUrl()['query'];
       expect('{\"uid\":{\"\$nin\":[\"abc\",\"def\",\"sample\"]}}', contains);
     });
 
     test('test where exists Operation', () async {
-      query.where('uid', QueryOperation.exists(value: true));
+      query.where('uid', QueryOperation.exists(true));
       final contains = query.getQueryUrl()['query'];
       expect('{\"uid\":{\"\$exists\":true}}', contains);
     });
 
     test('test where isGreaterThan Operation', () async {
-      query.where('uid', QueryOperation.isGreaterThan(value: 'price'));
+      query.where('uid', QueryOperation.isGreaterThan('price'));
       final contains = query.getQueryUrl()['query'];
       expect('{\"uid\":{\"\$gt\":\"price\"}}', contains);
     });
 
     test('test where isGreaterThanOrEqual Operation', () async {
-      query.where('uid', QueryOperation.isGreaterThanOrEqual(value: 'price'));
+      query.where('uid', QueryOperation.isGreaterThanOrEqual('price'));
       final contains = query.getQueryUrl()['query'];
       expect('{\"uid\":{\"\$gte\":\"price\"}}', contains);
     });
 
     test('test where isLessThan Operation', () async {
-      query.where('uid', QueryOperation.isLessThan(value: 'price'));
+      query.where('uid', QueryOperation.isLessThan('price'));
       final contains = query.getQueryUrl()['query'];
       expect('{\"uid\":{\"\$lt\":\"price\"}}', contains);
     });
 
     test('test where isLessThanOrEqual Operation', () async {
-      query.where('uid', QueryOperation.isLessThanOrEqual(value: 'price'));
+      query.where('uid', QueryOperation.isLessThanOrEqual('price'));
       final contains = query.getQueryUrl()['query'];
       expect('{\"uid\":{\"\$lte\":\"price\"}}', contains);
     });
 
     test('test where matches Operation', () async {
-      query.where('uid', QueryOperation.matches(regex: 'price'));
+      query.where('uid', QueryOperation.matches('price'));
       final contains = query.getQueryUrl()['query'];
       expect('{\"uid\":{\"\$regex\":\"price\"}}', contains);
     });
@@ -152,17 +151,16 @@ void main() {
   });
 
   group('functional testcases for the Query class', () {
-    Query query;
+    late Query query;
     var apiKey = '', environment = '', deliveryToken = '', host = '';
-    Stack stack;
+    late Stack stack;
 
     setUpAll(() async {
-      load();
-      apiKey = env['apiKey'];
-      host = env['host'];
-      deliveryToken = env['deliveryToken'];
-      environment = env['environment'];
-      stack = Stack(apiKey, deliveryToken, environment, host: host);
+      final dotEnv = DotEnv()..load();
+      apiKey = dotEnv.map['apiKey']!;
+      deliveryToken = dotEnv.map['deliveryToken']!;
+      environment = dotEnv.map['environment']!;
+      stack = Stack(apiKey, deliveryToken, environment, branch: 'main');
     });
     setUp(() async {
       query = stack.contentType('faq').entry().query();
@@ -177,17 +175,16 @@ void main() {
   });
 
   group('testcases for API queries', () {
-    Query query;
-    var apiKey = '', environment = '', deliveryToken = '', host = '';
-    Stack stack;
+    late Query query;
+    var apiKey = '', environment = '', deliveryToken = '';
+    late Stack stack;
 
     setUpAll(() async {
-      load();
-      apiKey = env['apiKey'];
-      host = env['host'];
-      deliveryToken = env['deliveryToken'];
-      environment = env['environment'];
-      stack = Stack(apiKey, deliveryToken, environment, host: host);
+      final dotEnv = DotEnv()..load();
+      apiKey = dotEnv.map['apiKey']!;
+      deliveryToken = dotEnv.map['deliveryToken']!;
+      environment = dotEnv.map['environment']!;
+      stack = Stack(apiKey, deliveryToken, environment, branch: 'main');
     });
 
     setUp(() async {
@@ -202,7 +199,7 @@ void main() {
     });
 
     test('test where equals API Operation', () async {
-      query.where('attendee', QueryOperation.equals(value: 10));
+      query.where('attendee', QueryOperation.equals(10));
       await query.find().then((response) {
         expect(response != null, true);
       });
@@ -211,7 +208,7 @@ void main() {
     test('test notContainedIn in Query', () async {
       await query.find().then((response) async {
         final List<String> arrayValue = ['Room 13', 'Room 14', 'Room 17'];
-        query.where('title', QueryOperation.excludes(value: arrayValue));
+        query.where('title', QueryOperation.excludes(arrayValue));
         await query.find().then((response) {
           final queryMap = response['entries'].length;
           expect(queryMap!=null, true);
@@ -220,14 +217,14 @@ void main() {
     });
 
     test('test notContainedIn function parameter contains key', () async {
-      query.where('attendee', QueryOperation.notEquals(value: 20));
+      query.where('attendee', QueryOperation.notEquals(20));
       await query.find<List<EntryModel>, EntryModel>().then((response) {
         expect(0, response.length);
       });
     });
 
     test('test notEquals in Query', () async {
-      query.where('attendee', QueryOperation.notEquals(value: 20));
+      query.where('attendee', QueryOperation.notEquals(20));
       await query.find().then((response) {
         expect(0, response['entries'].length);
       });
@@ -235,7 +232,7 @@ void main() {
 
     test('test includes in Query', () async {
       final includeList = ['Room 13', 'Room 18', 'Room 19'];
-      query.where('title', QueryOperation.includes(value: includeList));
+      query.where('title', QueryOperation.includes(includeList));
       await query.find().then((response) {
         expect(response['entries']!=null, true);
       }).catchError((onError) {
@@ -245,7 +242,7 @@ void main() {
 
     test('test excludes in Query', () async {
       final includeList = ['Room 13', 'Room 18', 'Room 19'];
-      query.where('title', QueryOperation.excludes(value: includeList));
+      query.where('title', QueryOperation.excludes(includeList));
       await query.find().then((response) {
         expect(0, response['entries'].length);
       }).catchError((onError) {
@@ -254,7 +251,7 @@ void main() {
     });
 
     test('test isLessThan in Query', () async {
-      query.where('attendee', QueryOperation.isLessThan(value: 50));
+      query.where('attendee', QueryOperation.isLessThan(50));
       await query.find().then((response) {
         final List listOfEntry = response['entries'];
         // ignore: prefer_final_in_for_each
@@ -267,7 +264,7 @@ void main() {
     });
 
     test('test isLessThanOrEqual in Query', () async {
-      query.where('attendee', QueryOperation.isLessThanOrEqual(value: 50));
+      query.where('attendee', QueryOperation.isLessThanOrEqual(50));
       await query.find().then((response) {
         final List listOfEntry = response['entries'];
         // ignore: prefer_final_in_for_each
@@ -280,7 +277,7 @@ void main() {
     });
 
     test('test isGreaterThan in Query', () async {
-      query.where('attendee', QueryOperation.isGreaterThan(value: 50));
+      query.where('attendee', QueryOperation.isGreaterThan(50));
       await query.find().then((response) {
         final List listOfEntry = response['entries'];
         for (final entry in listOfEntry) {
@@ -292,7 +289,7 @@ void main() {
     });
 
     test('test isGreaterThanOrEqual in Query', () async {
-      query.where('attendee', QueryOperation.isGreaterThanOrEqual(value: 70));
+      query.where('attendee', QueryOperation.isGreaterThanOrEqual(70));
       await query.find().then((response) {
         final List listOfEntry = response['entries'];
         for (final entry in listOfEntry) {
@@ -304,7 +301,7 @@ void main() {
     });
 
     test('test exists in Query', () async {
-      query.where('attendee', QueryOperation.exists(value: true));
+      query.where('attendee', QueryOperation.exists(true));
       await query.find().then((response) {
         final List listOfEntry = response['entries'];
         expect(0, listOfEntry.length);
@@ -314,7 +311,7 @@ void main() {
     });
 
     test('test matches in Query', () async {
-      query.where('title', QueryOperation.matches(regex: 'Room'));
+      query.where('title', QueryOperation.matches('Room'));
       await query.find().then((response) {
         final List listOfEntry = response['entries'];
         expect(0, listOfEntry.length);
@@ -326,8 +323,8 @@ void main() {
     test('test whereReference in Query', () async {
       final queryBase = stack.contentType('room').entry().query();
       // ignore: cascade_invocations
-      queryBase.where('title', QueryOperation.equals(value: 'Room 14'));
-      query.whereReference('brand', QueryReference.include(query: queryBase));
+      queryBase.where('title', QueryOperation.equals('Room 14'));
+      query.whereReference('brand', QueryReference.include(queryBase));
       await query.find().then((response) {
         expect(
             'Failed to fetch entries. Please try again with valid parameters.',
@@ -340,9 +337,9 @@ void main() {
     test('test whereReference NinQuery', () async {
       final queryBase = stack.contentType('room').entry().query();
       // ignore: cascade_invocations
-      queryBase.where('title', QueryOperation.equals(value: 'Room 14'));
+      queryBase.where('title', QueryOperation.equals('Room 14'));
       query.whereReference(
-          'fieldUid', QueryReference.notInclude(query: queryBase));
+          'fieldUid', QueryReference.notInclude(queryBase));
       await query.find().then((response) {
         expect(
             'Failed to fetch entries. Please try again with valid parameters.',
@@ -353,15 +350,15 @@ void main() {
     test('test operator And in Query', () async {
       final queryBase1 = stack.contentType('room').entry().query();
       // ignore: cascade_invocations
-      queryBase1.where('title', QueryOperation.equals(value: 'Room 13'));
+      queryBase1.where('title', QueryOperation.equals('Room 13'));
 
       final stackInstance2 = stack;
       final queryBase2 = stackInstance2.contentType('room').entry().query();
       // ignore: cascade_invocations
-      queryBase2.where('attendee', QueryOperation.equals(value: 20));
+      queryBase2.where('attendee', QueryOperation.equals(20));
 
       final List<Query> listOfQuery = [queryBase1, queryBase2];
-      query.operator(QueryOperator.and(queryObjects: listOfQuery));
+      query.operator(QueryOperator.and(listOfQuery));
       await query.find().then((response) {
         final completeUrl = query.getQueryUrl()['query'];
         //print(response.toString());
@@ -376,15 +373,15 @@ void main() {
       final stackInstance1 = stack;
       final queryBase1 = stackInstance1.contentType('room').entry().query();
       // ignore: cascade_invocations
-      queryBase1.where('title', QueryOperation.equals(value: 'Room 13'));
+      queryBase1.where('title', QueryOperation.equals('Room 13'));
 
       final stackInstance2 = stack;
       final queryBase2 = stackInstance2.contentType('room').entry().query();
       // ignore: cascade_invocations
-      queryBase2.where('attendee', QueryOperation.equals(value: 20));
+      queryBase2.where('attendee', QueryOperation.equals(20));
 
       final List<Query> listOfQuery = [queryBase1, queryBase2];
-      query.operator(QueryOperator.or(queryObjects: listOfQuery));
+      query.operator(QueryOperator.or(listOfQuery));
       await query.find().then((response) {
         final completeUrl = query.getQueryUrl()['query'];
         //(response.toString());
@@ -429,17 +426,16 @@ void main() {
   });
 
   group('testcases for entry queryable', () {
-    Query query;
-    var apiKey = '', environment = '', deliveryToken = '', host = '';
-    Stack stack;
+    late Query query;
+    var apiKey = '', environment = '', deliveryToken = '';
+    late Stack stack;
 
     setUpAll(() async {
-      load();
-      apiKey = env['apiKey'];
-      host = env['host'];
-      deliveryToken = env['deliveryToken'];
-      environment = env['environment'];
-      stack = Stack(apiKey, deliveryToken, environment, host: host);
+      final dotEnv = DotEnv()..load();
+      apiKey = dotEnv.map['apiKey']!;
+      deliveryToken = dotEnv.map['deliveryToken']!;
+      environment = dotEnv.map['environment']!;
+      stack = Stack(apiKey, deliveryToken, environment, branch: 'main');
     });
 
     setUp(() async {
@@ -479,7 +475,7 @@ void main() {
         ..except(['field1', 'field2', 'field3', 'field4'])
         ..includeReference('referenceFieldUid',
             includeReferenceField:
-                include.Include.none(fieldUidList: uiFieldList))
+                include.Include.none(uiFieldList))
         ..includeContentType()
         ..includeReferenceContentTypeUID()
         ..addParam('key', 'value');
@@ -499,7 +495,7 @@ void main() {
         ..locale('en-us')
         ..includeReference('referenceFieldUid',
             includeReferenceField:
-                include.Include.only(fieldUidList: uiFieldList));
+                include.Include.only(uiFieldList));
       final result = query.getQueryUrl();
       expect('referenceFieldUid', result['include[]']);
       expect('{referenceFieldUid: [demo1, demo2, demo3]}', result['only']);
@@ -511,7 +507,7 @@ void main() {
         ..locale('en-us')
         ..includeReference('referenceFieldUid',
             includeReferenceField:
-                include.Include.except(fieldUidList: uiFieldList));
+                include.Include.except(uiFieldList));
       final result = query.getQueryUrl();
       expect('referenceFieldUid', result['include[]']);
       expect('{referenceFieldUid: [demo1, demo2, demo3]}', result['except']);

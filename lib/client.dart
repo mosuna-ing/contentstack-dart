@@ -10,8 +10,11 @@ class HttpClient extends http.BaseClient {
   final Stack stack;
   final Map<String, String> stackHeaders;
 
-  factory HttpClient(Map<String, String> headers,
-      {http.Client client, Stack stack}) {
+  factory HttpClient(
+    Map<String, String> headers, {
+    http.Client? client,
+    required Stack stack,
+  }) {
     final stackClient = client ?? http.Client();
     return HttpClient._internal(stackClient, headers, stack);
   }
@@ -29,17 +32,14 @@ class HttpClient extends http.BaseClient {
   Future<T> sendRequest<T, K>(Uri uri) async {
     stackHeaders[CONTENT_TYPE] = CONTENT_TYPE_VALUE;
     stackHeaders[X_USER_AGENT] = X_USER_AGENT_VALUE;
-    final response = await http
-        .get(uri, headers: stackHeaders)
-        .timeout(const Duration(seconds: TIMEOUT));
-    Object bodyJson;
+    final response = await http.get(uri, headers: stackHeaders).timeout(const Duration(seconds: TIMEOUT));
+    T bodyJson;
     try {
       bodyJson = jsonDecode(response.body);
     } on FormatException {
       final contentType = response.headers['content-type'];
       if (contentType != null && !contentType.contains('application/json')) {
-        throw Exception(
-            "Returned value was not JSON. Did the uri end with '.json'?");
+        throw Exception("Returned value was not JSON. Did the uri end with '.json'?");
       }
       rethrow;
     }
@@ -72,7 +72,7 @@ class HttpClient extends http.BaseClient {
   /// https://stackoverflow.com/questions/56271651/how-to-pass-a-generic-type-as-a-parameter-to-a-future-in-flutter
   static T fromJson<T, K>(dynamic json) {
     if (json is Iterable) {
-      return _fromJsonList<K>(json) as T;
+      return _fromJsonList<K>(json.toList()) as T;
     } else if (T == AssetModel) {
       return AssetModel.fromJson(json) as T;
     } else if (T == EntryModel) {
@@ -84,7 +84,7 @@ class HttpClient extends http.BaseClient {
     }
   }
 
-  static List<K> _fromJsonList<K>(List jsonList) {
+  static List<K>? _fromJsonList<K>(List? jsonList) {
     if (jsonList == null) {
       return null;
     }

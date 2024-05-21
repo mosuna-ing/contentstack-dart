@@ -1,11 +1,13 @@
 import 'package:contentstack/src/query.dart';
-import 'package:super_enum/super_enum.dart';
-part 'reference.g.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@superEnum
-enum _QueryReference {
-  @Data(fields: [DataField<Query>('query')])
-  Include,
-  @Data(fields: [DataField<Query>('query')])
-  NotInclude
+
+part 'reference.freezed.dart';
+
+@freezed
+class QueryReference with _$QueryReference {
+  const factory QueryReference.include(Query query) = QueryReferenceInclude;
+
+  const factory QueryReference.notInclude(Query query) = QueryReferenceNotInclude;
+
 }
